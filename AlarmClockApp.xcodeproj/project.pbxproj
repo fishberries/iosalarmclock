@@ -1,0 +1,277 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+	A1000001 /* AlarmClockAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000002 /* AlarmClockAppApp.swift */; };
+	A1000003 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004 /* ContentView.swift */; };
+	A1000005 /* Alarm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000006 /* Alarm.swift */; };
+	A1000007 /* AlarmStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000008 /* AlarmStorage.swift */; };
+	A1000009 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000010 /* NotificationManager.swift */; };
+	A1000011 /* AlarmEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000012 /* AlarmEditView.swift */; };
+	A1000013 /* AlarmListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000014 /* AlarmListView.swift */; };
+	A1000015 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000016 /* SettingsView.swift */; };
+	A1000017 /* WakeupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000018 /* WakeupView.swift */; };
+	A1000019 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000020 /* Assets.xcassets */; };
+	A1000021 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A1000022 /* Info.plist */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+	A1000002 /* AlarmClockAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmClockAppApp.swift; sourceTree = "<group>"; };
+	A1000004 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+	A1000006 /* Alarm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/Alarm.swift; sourceTree = "<group>"; };
+	A1000008 /* AlarmStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/AlarmStorage.swift; sourceTree = "<group>"; };
+	A1000010 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/NotificationManager.swift; sourceTree = "<group>"; };
+	A1000012 /* AlarmEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/AlarmEditView.swift; sourceTree = "<group>"; };
+	A1000014 /* AlarmListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/AlarmListView.swift; sourceTree = "<group>"; };
+	A1000016 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/SettingsView.swift; sourceTree = "<group>"; };
+	A1000018 /* WakeupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/WakeupView.swift; sourceTree = "<group>"; };
+	A1000020 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+	A1000022 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+	A1000023 /* AlarmClockApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlarmClockApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+	A1000024 /* Frameworks */ = {
+		isa = PBXFrameworksBuildPhase;
+		buildActionMask = 2147483647;
+		files = (
+		);
+		runOnlyForDeploymentPostprocessing = 0;
+	};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+	A1000025 /* AlarmClockApp */ = {
+		isa = PBXGroup;
+		children = (
+			A1000002,
+			A1000004,
+			A1000006,
+			A1000008,
+			A1000010,
+			A1000012,
+			A1000014,
+			A1000016,
+			A1000018,
+			A1000020,
+			A1000022,
+		);
+		path = AlarmClockApp;
+		sourceTree = "<group>";
+	};
+	A1000026 /* Models */ = {
+		isa = PBXGroup;
+		children = (
+			A1000006,
+		);
+		path = Models;
+		sourceTree = "<group>";
+	};
+	A1000027 /* Services */ = {
+		isa = PBXGroup;
+		children = (
+			A1000008,
+			A1000010,
+		);
+		path = Services;
+		sourceTree = "<group>";
+	};
+	A1000028 /* Views */ = {
+		isa = PBXGroup;
+		children = (
+			A1000012,
+			A1000014,
+			A1000016,
+			A1000018,
+		);
+		path = Views;
+		sourceTree = "<group>";
+	};
+	A1000029 /* Products */ = {
+		isa = PBXGroup;
+		children = (
+			A1000023,
+		);
+		name = Products;
+		sourceTree = "<group>";
+	};
+	A1000030 /* Project */ = {
+		isa = PBXGroup;
+		children = (
+			A1000025,
+			A1000029,
+		);
+		sourceTree = "<group>";
+	};
+/* End PBXGroup section */
+
+/* Begin PBXSourcesBuildPhase section */
+	A1000031 /* Sources */ = {
+		isa = PBXSourcesBuildPhase;
+		buildActionMask = 2147483647;
+		files = (
+			A1000001,
+			A1000003,
+			A1000005,
+			A1000007,
+			A1000009,
+			A1000011,
+			A1000013,
+			A1000015,
+			A1000017,
+		);
+		runOnlyForDeploymentPostprocessing = 0;
+	};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXResourcesBuildPhase section */
+	A1000032 /* Resources */ = {
+		isa = PBXResourcesBuildPhase;
+		buildActionMask = 2147483647;
+		files = (
+			A1000019,
+			A1000021,
+		);
+		runOnlyForDeploymentPostprocessing = 0;
+	};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+	A1000033 /* AlarmClockApp */ = {
+		isa = PBXNativeTarget;
+		buildConfigurationList = A1000034 /* Build configuration list for PBXNativeTarget "AlarmClockApp" */;
+		buildPhases = (
+			A1000031 /* Sources */,
+			A1000024 /* Frameworks */,
+			A1000032 /* Resources */,
+		);
+		buildRules = (
+		);
+		dependencies = (
+		);
+		name = AlarmClockApp;
+		productName = AlarmClockApp;
+		productReference = A1000023;
+		productType = "com.apple.product-type.application";
+	};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+	A1000035 /* Project object */ = {
+		isa = PBXProject;
+		attributes = {
+			LastSwiftUpdateCheck = 1600;
+			LastUpgradeCheck = 1600;
+			TargetAttributes = {
+				A1000033 = {
+					CreatedOnToolsVersion = 16.0;
+				};
+			};
+		};
+		buildConfigurationList = A1000036 /* Build configuration list for PBXProject "AlarmClockApp" */;
+		compatibilityVersion = "Xcode 14.0";
+		developmentRegion = en;
+		hasScannedForEncodings = 0;
+		knownRegions = (
+			en,
+			Base,
+		);
+		mainGroup = A1000030;
+		productRefGroup = A1000029;
+		projectDirPath = "";
+		projectRoot = "";
+		targets = (
+			A1000033,
+		);
+	};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+	A1000037 /* Debug */ = {
+		isa = XCBuildConfiguration;
+		buildSettings = {
+			ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+			ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+			CLANG_ENABLE_MODULES = YES;
+			CODE_SIGN_STYLE = Automatic;
+			CURRENT_PROJECT_VERSION = 1;
+			GENERATE_INFOPLIST_FILE = YES;
+			INFOPLIST_FILE = AlarmClockApp/Info.plist;
+			IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+			LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+			MARKETING_VERSION = 1.0;
+			PRODUCT_BUNDLE_IDENTIFIER = com.example.AlarmClockApp;
+			PRODUCT_NAME = "$(TARGET_NAME)";
+			SDKROOT = iphoneos;
+			SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+			SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			SWIFT_VERSION = 5.9;
+			TARGETED_DEVICE_FAMILY = 1;
+		};
+		name = Debug;
+	};
+	A1000038 /* Release */ = {
+		isa = XCBuildConfiguration;
+		buildSettings = {
+			ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+			ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+			CLANG_ENABLE_MODULES = YES;
+			CODE_SIGN_STYLE = Automatic;
+			CURRENT_PROJECT_VERSION = 1;
+			GENERATE_INFOPLIST_FILE = YES;
+			INFOPLIST_FILE = AlarmClockApp/Info.plist;
+			IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+			LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+			MARKETING_VERSION = 1.0;
+			PRODUCT_BUNDLE_IDENTIFIER = com.example.AlarmClockApp;
+			PRODUCT_NAME = "$(TARGET_NAME)";
+			SDKROOT = iphoneos;
+			SWIFT_VERSION = 5.9;
+			TARGETED_DEVICE_FAMILY = 1;
+		};
+		name = Release;
+	};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+	A1000036 /* Build configuration list for PBXProject "AlarmClockApp" */ = {
+		isa = XCConfigurationList;
+		buildConfigurations = (
+			A1000037 /* Debug */,
+			A1000038 /* Release */,
+		);
+		defaultConfigurationIsVisible = 0;
+		defaultConfigurationName = Release;
+	};
+	A1000034 /* Build configuration list for PBXNativeTarget "AlarmClockApp" */ = {
+		isa = XCConfigurationList;
+		buildConfigurations = (
+			A1000039 /* Debug */,
+			A1000040 /* Release */,
+		);
+		defaultConfigurationIsVisible = 0;
+		defaultConfigurationName = Release;
+	};
+/* End XCConfigurationList section */
+
+	A1000039 /* Debug */ = {
+		isa = XCBuildConfiguration;
+		buildSettings = {
+		};
+		name = Debug;
+	};
+	A1000040 /* Release */ = {
+		isa = XCBuildConfiguration;
+		buildSettings = {
+		};
+		name = Release;
+	};
+
+	};
+	rootObject = A1000035;
+}
