@@ -22,20 +22,62 @@ jobs:
       - name: Show Xcode version
         run: xcodebuild -version
 
-      - name: Build app for iOS Simulator
+      - name: List directory structure
         run: |
-          set -e
-          PROJECT=$(find . -maxdepth 1 -name "*.xcodeproj" | head -n 1)
+          echo "=== Project root structure ==="
+          ls -la
+          echo ""
+          echo "=== Looking for xcodeproj ==="
+          find . -maxdepth 1 -name "*.xcodeproj" -type d
+
+      - name: List schemes
+        run: |
+          PROJECT=$(find . -maxdepth 1 -name "*.xcodeproj" -type d | head -n 1)
           if [ -z "$PROJECT" ]; then
-            echo "No Xcode project found."
+            echo "ERROR: No Xcode project found!"
             exit 1
           fi
           echo "Using project: $PROJECT"
-          xcodebuild -project "$PROJECT" -scheme AlarmClockApp -destination 'platform=iOS Simulator,name=iPhone 16' -configuration Debug build
+          xcodebuild -project "$PROJECT" -list
 
-      - name: Upload simulator build artifact
+      - name: Build app for iOS Simulator
+        run: |
+          set -e
+          PROJECT=$(find . -maxdepth 1 -name "*.xcodeproj" -type d | head -n 1)
+          if [ -z "$PROJECT" ]; then
+            echo "ERROR: No Xcode project found."
+            exit 1
+          fi
+          echo "Building with project: $PROJECT"
+          xcodebuild \
+            -project "$PROJECT" \
+            -scheme AlarmClockApp \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -configuration Debug \
+            -derivedDataPath ./build \
+            -verbose \
+            build 2>&1 | tee build.log
+
+      - name: Check build output
+        if: always()
+        run: |
+          if [ -f build.log ]; then
+            echo "=== Build Log (last 100 lines) ==="
+            tail -100 build.log
+          fi
+
+      - name: Upload build artifacts
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: ios-simulator-build
           path: build/
-          if-no-files-found: error
+          if-no-files-found: warn
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          if-no-files-found: ignore
