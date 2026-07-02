@@ -4,27 +4,20 @@ struct AlarmListView: View {
     @ObservedObject var storage: AlarmStorage
     @State private var showingEditor = false
     @State private var editingAlarm: Alarm?
-    @State private var showingWakeup = false
-    @State private var activeAlarm: Alarm?
+    @State private var editMode = EditMode.inactive
 
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.18), Color.purple.opacity(0.12)]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                    .ignoresSafeArea()
+                LinearGradient(
+                    colors: [Color.blue.opacity(0.20), Color.purple.opacity(0.10)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
 
-                VStack(alignment: .leading, spacing: 16) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Good morning")
-                            .font(.headline)
-                            .foregroundStyle(.secondary)
-                        Text(Date(), style: .date)
-                            .font(.callout)
-                            .foregroundStyle(.secondary)
-                        Text("Wake up your way")
-                            .font(.title.bold())
-                    }
-                    .padding(.horizontal)
+                VStack(spacing: 16) {
+                    header
 
                     List {
                         ForEach(storage.alarms) { alarm in
@@ -32,32 +25,7 @@ struct AlarmListView: View {
                                 editingAlarm = alarm
                                 showingEditor = true
                             } label: {
-                                HStack(spacing: 16) {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text(alarm.title)
-                                            .font(.headline)
-                                            .foregroundStyle(.primary)
-                                        Text(alarm.sound)
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                        Text(alarm.repeatDays.joined(separator: ", "))
-                                            .font(.caption2)
-                                            .foregroundStyle(.secondary)
-                                    }
-
-                                    Spacer()
-
-                                    VStack(alignment: .trailing, spacing: 6) {
-                                        Text(alarm.time, style: .time)
-                                            .font(.title2.weight(.semibold))
-                                            .foregroundStyle(.primary)
-                                        Toggle("", isOn: Binding(get: { alarm.enabled }, set: { newValue in
-                                            storage.toggleAlarm(id: alarm.id, enabled: newValue)
-                                        }))
-                                        .labelsHidden()
-                                    }
-                                }
-                                .padding(.vertical, 6)
+                                alarmRow(alarm)
                             }
                             .buttonStyle(.plain)
                         }
@@ -65,52 +33,125 @@ struct AlarmListView: View {
                     }
                     .listStyle(.plain)
                     .scrollContentBackground(.hidden)
+                    .background(Color.clear)
 
-                    VStack(spacing: 12) {
-                        Button {
-                            editingAlarm = nil
-                            showingEditor = true
-                        } label: {
-                            Label("Add alarm", systemImage: "plus.circle.fill")
-                                .font(.headline.weight(.semibold))
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue.opacity(0.15))
-                                .foregroundStyle(.blue)
-                                .clipShape(RoundedRectangle(cornerRadius: 14))
-                        }
-
-                        HStack(spacing: 12) {
-                            Label("Music or sounds", systemImage: "speaker.wave.2")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                            Spacer()
-                            Label("Sleep timer", systemImage: "moon.zzz")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                        .padding(.horizontal)
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom, 12)
+                    bottomActions
                 }
+                .padding(.bottom, 8)
             }
             .navigationTitle("Alarm Clock")
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Settings") {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    EditButton()
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        editingAlarm = nil
+                        showingEditor = true
+                    } label: {
+                        Image(systemName: "plus")
                     }
                 }
             }
+            .environment(\.editMode, $editMode)
             .sheet(isPresented: $showingEditor) {
                 AlarmEditView(storage: storage, alarm: editingAlarm)
             }
-            .sheet(isPresented: $showingWakeup) {
-                if let activeAlarm {
-                    WakeupView(alarm: activeAlarm)
-                }
+        }
+    }
+
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Good morning")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+            Text(Date(), style: .date)
+                .font(.callout)
+                .foregroundStyle(.secondary)
+            Text("Wake up your way")
+                .font(.largeTitle.weight(.bold))
+                .foregroundStyle(.primary)
+
+            Capsule()
+                .fill(Color.blue.opacity(0.2))
+                .frame(width: 62, height: 5)
+        }
+        .padding(.horizontal)
+    }
+
+    private func alarmRow(_ alarm: Alarm) -> some View {
+        HStack(alignment: .top, spacing: 16) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(alarm.displayLabel)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                Text(alarm.repeatDescription)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text(alarm.sound)
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
+
+            Spacer()
+
+            VStack(alignment: .trailing, spacing: 8) {
+                Text(alarm.time, style: .time)
+                    .font(.title2.weight(.semibold))
+                    .foregroundColor(.primary)
+                Toggle("", isOn: Binding(
+                    get: { alarm.enabled },
+                    set: { newValue in
+                        storage.toggleAlarm(id: alarm.id, enabled: newValue)
+                    }
+                ))
+                .labelsHidden()
             }
         }
+        .padding(.vertical, 10)
+        .padding(.horizontal, 6)
+    }
+
+    private var bottomActions: some View {
+        VStack(spacing: 12) {
+            Button {
+                editingAlarm = nil
+                showingEditor = true
+            } label: {
+                Label("Create new alarm", systemImage: "plus.circle.fill")
+                    .font(.headline.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.white.opacity(0.9))
+                    .foregroundColor(.blue)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+            }
+
+            HStack(spacing: 12) {
+                infoCard(systemName: "speaker.wave.2", title: "Sound library")
+                NavigationLink(destination: SleepTimerView()) {
+                    infoCard(systemName: "moon.zzz", title: "Sleep timer")
+                }
+            }
+            .padding(.horizontal)
+        }
+    }
+
+    private func infoCard(systemName: String, title: String) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: systemName)
+                .font(.title3)
+                .frame(width: 32, height: 32)
+                .background(Color.blue.opacity(0.15))
+                .cornerRadius(10)
+            Text(title)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            Spacer()
+        }
+        .padding()
+        .background(Color(.systemBackground).opacity(0.95))
+        .cornerRadius(16)
     }
 
     private func delete(at offsets: IndexSet) {

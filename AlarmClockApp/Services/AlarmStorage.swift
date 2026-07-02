@@ -8,21 +8,27 @@ final class AlarmStorage: ObservableObject {
 
     init() {
         load()
+        refreshNotifications()
     }
 
     func addAlarm(_ alarm: Alarm) {
         alarms.append(alarm)
         save()
+        refreshNotifications()
     }
 
     func updateAlarm(_ alarm: Alarm) {
         if let index = alarms.firstIndex(where: { $0.id == alarm.id }) {
             alarms[index] = alarm
             save()
+            refreshNotifications()
         }
     }
 
     func deleteAlarm(id: UUID) {
+        if let alarm = alarms.first(where: { $0.id == id }) {
+            NotificationManager.shared.cancel(alarm: alarm)
+        }
         alarms.removeAll { $0.id == id }
         save()
     }
@@ -31,6 +37,7 @@ final class AlarmStorage: ObservableObject {
         if let index = alarms.firstIndex(where: { $0.id == id }) {
             alarms[index].enabled = enabled
             save()
+            refreshNotifications()
         }
     }
 
@@ -44,8 +51,8 @@ final class AlarmStorage: ObservableObject {
     private func load() {
         guard let data = UserDefaults.standard.data(forKey: storageKey) else {
             alarms = [
-                Alarm(title: "Wake up", time: defaultDate(hour: 7, minute: 0), enabled: true, sound: "Ocean Waves"),
-                Alarm(title: "Gym", time: defaultDate(hour: 6, minute: 30), enabled: false, sound: "Bright Bell")
+                Alarm(title: "Morning", label: "Start the day", time: defaultDate(hour: 7, minute: 0), enabled: true, sound: "Ocean Waves", repeatOptions: [.weekdays]),
+                Alarm(title: "Workout", label: "Gym session", time: defaultDate(hour: 6, minute: 30), enabled: false, sound: "Bright Bell", repeatOptions: [.weekdays])
             ]
             return
         }
@@ -53,6 +60,15 @@ final class AlarmStorage: ObservableObject {
         let decoder = JSONDecoder()
         if let decoded = try? decoder.decode([Alarm].self, from: data) {
             alarms = decoded
+        } else {
+            alarms = []
+        }
+    }
+
+    private func refreshNotifications() {
+        NotificationManager.shared.cancelAll()
+        for alarm in alarms where alarm.enabled {
+            NotificationManager.shared.schedule(alarm: alarm)
         }
     }
 

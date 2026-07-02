@@ -1,13 +1,28 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var storage = AlarmStorage()
+    @ObservedObject var storage: AlarmStorage
 
     var body: some View {
-        AlarmListView(storage: storage)
+        TabView {
+            AlarmListView(storage: storage)
+                .tabItem {
+                    Label("Alarms", systemImage: "alarm")
+                }
+
+            NightstandandView(storage: storage)
+                .tabItem {
+                    Label("Nightstand", systemImage: "moon")
+                }
+
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape")
+                }
+        }
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView(storage: AlarmStorage())
 }

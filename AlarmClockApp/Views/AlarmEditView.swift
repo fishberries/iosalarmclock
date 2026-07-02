@@ -4,10 +4,11 @@ struct AlarmEditView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var storage: AlarmStorage
     @State private var title: String
+    @State private var label: String
     @State private var time: Date
     @State private var enabled: Bool
     @State private var sound: String
-    @State private var repeatDays: [String]
+    @State private var repeatOptions: [RepeatOption]
     @State private var snoozeMinutes: Int
     @State private var volume: Double
 
@@ -16,11 +17,12 @@ struct AlarmEditView: View {
     init(storage: AlarmStorage, alarm: Alarm? = nil) {
         self.storage = storage
         self.alarm = alarm
-        _title = State(initialValue: alarm?.title ?? "New alarm")
+        _title = State(initialValue: alarm?.title ?? "Morning Alarm")
+        _label = State(initialValue: alarm?.label ?? "")
         _time = State(initialValue: alarm?.time ?? Date())
         _enabled = State(initialValue: alarm?.enabled ?? true)
-        _sound = State(initialValue: alarm?.sound ?? "Gentle Chime")
-        _repeatDays = State(initialValue: alarm?.repeatDays ?? ["Every day"])
+        _sound = State(initialValue: alarm?.sound ?? Alarm.defaultSounds.first!)
+        _repeatOptions = State(initialValue: alarm?.repeatOptions ?? [.everyDay])
         _snoozeMinutes = State(initialValue: alarm?.snoozeMinutes ?? 9)
         _volume = State(initialValue: alarm?.volume ?? 0.8)
     }
@@ -28,44 +30,44 @@ struct AlarmEditView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Details") {
+                Section("Alarm details") {
                     TextField("Alarm name", text: $title)
+                    TextField("Label (optional)", text: $label)
                     DatePicker("Time", selection: $time, displayedComponents: .hourAndMinute)
                     Toggle("Enabled", isOn: $enabled)
                 }
 
                 Section("Sound") {
                     Picker("Sound", selection: $sound) {
-                        Text("Gentle Chime").tag("Gentle Chime")
-                        Text("Ocean Waves").tag("Ocean Waves")
-                        Text("Bright Bell").tag("Bright Bell")
-                        Text("Soft Piano").tag("Soft Piano")
+                        ForEach(Alarm.defaultSounds, id: \.self) { sound in
+                            Text(sound).tag(sound)
+                        }
                     }
                     Slider(value: $volume, in: 0.1...1.0, step: 0.1)
-                    Text("Volume: \(Int(volume * 100))%")
+                    Text("Playback volume: \(Int(volume * 100))%")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                 }
 
                 Section("Repeat") {
-                    ForEach(["Every day", "Weekdays", "Weekends", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], id: \.self) { day in
-                        Toggle(day, isOn: Binding(
-                            get: { repeatDays.contains(day) },
-                            set: { isOn in
-                                if isOn {
-                                    if day == "Every day" {
-                                        repeatDays = ["Every day"]
-                                    } else if !repeatDays.contains(day) {
-                                        repeatDays.append(day)
+                    VStack(alignment: .leading, spacing: 10) {
+                        ForEach(RepeatOption.allCases) { option in
+                            Toggle(option.title, isOn: Binding(
+                                get: { repeatOptions.contains(option) },
+                                set: { isOn in
+                                    if isOn {
+                                        addRepeatOption(option)
+                                    } else {
+                                        repeatOptions.removeAll { $0 == option }
                                     }
-                                } else {
-                                    repeatDays.removeAll { $0 == day }
                                 }
-                            }
-                        ))
+                            ))
+                        }
                     }
                 }
 
                 Section("Snooze") {
-                    Stepper("Snooze \(snoozeMinutes) min", value: $snoozeMinutes, in: 1...20)
+                    Stepper("Snooze \(snoozeMinutes) min", value: $snoozeMinutes, in: 1...30)
                 }
             }
             .navigationTitle(alarm == nil ? "New alarm" : "Edit alarm")
@@ -78,14 +80,15 @@ struct AlarmEditView: View {
                         let newAlarm = Alarm(
                             id: alarm?.id ?? UUID(),
                             title: title.isEmpty ? "Alarm" : title,
+                            label: label,
                             time: time,
                             enabled: enabled,
                             sound: sound,
-                            repeatDays: repeatDays,
+                            repeatOptions: repeatOptions.isEmpty ? [.everyDay] : repeatOptions,
                             snoozeMinutes: snoozeMinutes,
                             volume: volume
                         )
-                        if let alarm {
+                        if let _ = alarm {
                             storage.updateAlarm(newAlarm)
                         } else {
                             storage.addAlarm(newAlarm)
@@ -94,6 +97,17 @@ struct AlarmEditView: View {
                     }
                 }
             }
+        }
+    }
+
+    private func addRepeatOption(_ option: RepeatOption) {
+        if option == .everyDay {
+            repeatOptions = [.everyDay]
+            return
+        }
+        repeatOptions.removeAll(where: { $0 == .everyDay })
+        if !repeatOptions.contains(option) {
+            repeatOptions.append(option)
         }
     }
 }
