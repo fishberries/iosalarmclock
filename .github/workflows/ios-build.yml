@@ -66,12 +66,30 @@ jobs:
             tail -100 build.log
           fi
 
+      - name: Collect .app bundles
+        if: always()
+        run: |
+          set -e || true
+          mkdir -p ./build-products
+          echo "Searching for .app bundles under ./build"
+          find ./build -name "*.app" -type d -print0 | xargs -0 -I{} bash -c 'cp -R "{}" ./build-products/ || true'
+          echo "Copied apps to ./build-products (if any):"
+          ls -la ./build-products || true
+
       - name: Upload build artifacts
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: ios-simulator-build
           path: build/
+          if-no-files-found: warn
+
+      - name: Upload built .app bundles
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-simulator-apps
+          path: build-products/
           if-no-files-found: warn
 
       - name: Upload build log
