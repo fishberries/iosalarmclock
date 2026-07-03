@@ -52,7 +52,7 @@ jobs:
           xcodebuild \
             -project "$PROJECT" \
             -scheme AlarmClockApp \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination 'platform=iOS Simulator,name=iPhone 17' \
             -configuration Debug \
             -derivedDataPath ./build \
             -verbose \
